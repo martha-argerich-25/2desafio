@@ -157,7 +157,7 @@ async function main() {
  //console.log(await manager.deleteProduct(8))
  
  //---------------AGREGAR INFORMACION------------------
- console.log(await manager.updateProducts(7,"prueba","prueba"))
+ //console.log(await manager.updateProducts(7,"prueba","prueba"))
 
 
 }
