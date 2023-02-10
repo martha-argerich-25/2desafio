@@ -77,7 +77,7 @@ async deleteProduct(id) {        // Elimina producto por ID lo filtro y me devue
 
 //-----------------------------METODO UPDATEPPRODUCT------------------------------
 // 2 parametros para actualizar
-async updateProducts (id,title){
+async updateProducts (id,title,description,price,thumbnail,code,stock){
 
 // creo un array vacio donde voy a meter los productos actualizados
 
@@ -86,23 +86,42 @@ let newArray = []
 const producto = await this.getProducts();
 // en el nuevo array guardo la busqueda por id
 newArray = producto.find((p)=>p.id===id);
-//validacion
+//validacion si no esta definido , que sea producto.title
 if (title === undefined) {
   title = producto.title;
+  //sino que sea newarray.title
 } else {
   newArray.title = title;
 }
-
-
+if (description === undefined) {
+  title = producto.description;
+} else {
+  newArray.description = description;
+}
+if (price === undefined || price !== Number) {
+  price = producto.price;
+} else {
+  newArray.price = price;
+}
+if (thumbnail === undefined) {
+  thumbnail = producto.thumbnail;
+} else {
+  newArray.thumbnail = thumbnail;
+}
+if (code === undefined) {
+  code = producto.code;
+} else {
+  newArray.code = code;
+}
+if (stock === undefined || stock !== Number) {
+  stock = producto.stock;
+} else {
+  newArray.stock = stock;
+}
 
 fs.promises.appendFile("./productos.json",`los productos actualizados  ${JSON.stringify(producto)}`)
-
-
 }
-
-
 }
-
 
 
 // ---------------------------------OPERACIONES DEL MANAGER--------------------------------------
@@ -138,7 +157,7 @@ async function main() {
  //console.log(await manager.deleteProduct(8))
  
  //---------------AGREGAR INFORMACION------------------
- console.log(await manager.updateProducts(7,"prueba"))
+ console.log(await manager.updateProducts(7,"prueba","prueba"))
 
 
 }
