@@ -1,10 +1,14 @@
 const fs = require("fs");
+const { json } = require("stream/consumers");
 
 
 //creamos la clase//
 class ProductManager {
   #path = "./productos.json";
 
+  constructor(path){
+ this.#path = path
+  }
 
 // METODO PARA CREAR PRODUCTO//
   async addProduct(id,title, description, price, thumbnail,code,stock) {
@@ -29,58 +33,68 @@ class ProductManager {
   }
 
 
-// METODO GETPRODUCT ( escribe ARCHIVO y lo parcea)FUNCIONA
+// ----------------------METODO GETPRODUCT ---------------------------
   async getProducts() {
 
     try {
-      const products = await fs.promises.writeFile(this.#path, "utf-8");
+      const products =  await fs.promises.readFile(this.#path,"utf-8");
 // paso los usuarios en objetos
       return JSON.parse(products);
     } catch (e) {
+      
       return []
     }
   }
 
-//METODO GETPRODUCTBYID//
-async getProductById (id){
-
-  
-const searchId = products.find((pr)=>pr.id === id)
-if(searchId ){
-  //lee
-  await fs.promises.readFile(this.#path, "utf-8");
-  //escribre
-  await fs.promises.writeFile(this.#path, "utf-8");
-  //lo tranforma en objeto
-  return JSON.parse(products);
-
-
-}
-}
-
-//METODO UPDATEPRODUCT
-
-
-
-//METODO DELETEPRODUCT
-
-async deleteProduct(id){
-  const deleteID =  product.find((pr)=>pr.id===id)
-  if(deleteID){
-    await fs.promises.unlink(this.#path)
+//-------------------METODO GETPRODUCTBYID-----------------------------------
+async getProductById(id) {        // Producto por ID
+  const prod = await this.getProducts();
+  let productget = prod.find((x) => x.id === id);
+  if (productget) {
+    await fs.promises.readFile(this.#path,"utf-8");
+      return console.log(productget);
+  } else {
+      throw new Error(`no se encuentra id`);
   }
+}
+
+//---------------------------METODO DELETEPRODUCT--------------------------------------
+
+async deleteProduct(id) {        // Elimina producto por ID lo filtro y me devuelve la actualizacion con un nuevo json
+  const producto = await this.getProducts();
+  let deleteProduct = producto.find((x) => x.id === id);
+  if (deleteProduct) {
+    let resto = producto.filter((x) => x.id !== id);
+    fs.promises.appendFile("./actualizacion.json",`actualizacion:  ${JSON.stringify(resto)}`);
+  } else {
+    throw new Error(` no hay producto con el : ${id}`);
+  }
+}
+
+
+
+
+
+//-----------------------------METODO UPDATEPPRODUCT------------------------------
+async updateProducts (id,title,description){
+
+
+
 
 }
 
+
 }
 
 
 
 
-// crear una funcion para ejecutar las operaciones de manager
+
+
+// ---------------------------------OPERACIONES DEL MANAGER--------------------------------------
 async function main() {
-  const manager = new ProductManager();
-
+  const manager = new ProductManager("./productos.json");
+//---------------------GENERA LOS PRODUCTOS-------------
   console.log(await manager.getProducts());
 
   await manager.addProduct(
@@ -92,14 +106,25 @@ async function main() {
     2
   );
 
+  await manager.addProduct(
+    "frutilla",
+    "melon",
+    45,
+    5,
+    7,
+    9
+  );
+
+
  
-//-----------------------------------
+//-----------------OBTENER EL PRODUCTO POR ID----------------------
 
-
-  console.log(await manager.getProductById(7));
-
-  //-----------------------------------
-  console.log(await manager.deleteProduct(7))
+await manager.getProductById(7)
+  //-------------------BORRA EL PRODUCTO COLOCANDO EL ID----------------
+ //console.log(await manager.deleteProduct(8))
+ 
+ //---------------AGREGAR INFORMACION------------------
+ //console.log(await manager.updateProducts)
 
 
 }
