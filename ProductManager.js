@@ -63,10 +63,10 @@ async getProductById(id) {        // Producto por ID
 
 async deleteProduct(id) {        // Elimina producto por ID lo filtro y me devuelve la actualizacion con un nuevo json
   const producto = await this.getProducts();
-  let deleteProduct = producto.find((x) => x.id === id);
+  let deleteProduct = producto.find((p) => p.id === id);
   if (deleteProduct) {
-    let resto = producto.filter((x) => x.id !== id);
-    fs.promises.appendFile("./actualizacion.json",`actualizacion:  ${JSON.stringify(resto)}`);
+    let resto = producto.filter((p) => p.id !== id);
+    fs.promises.appendFile("./listaActualizada.json",JSON.stringify(resto))
   } else {
     throw new Error(` no hay producto con el : ${id}`);
   }
@@ -81,7 +81,7 @@ async deleteProduct(id) {        // Elimina producto por ID lo filtro y me devue
 async updateProducts (id,data){
   
   const producto = await this.getProducts();
-  
+  // el metodo recorre el array y si ve algo lo cambia y sino te devuelve el objeto 
   const updatedProducts = producto.map((p)=>{
     if(p.id === id){
       return{
@@ -123,15 +123,16 @@ async function main() {
     9
   );
 
-
- 
 //-----------------OBTENER EL PRODUCTO POR ID----------------------
 
-//await manager.getProductById(7)
-  //-------------------BORRA EL PRODUCTO COLOCANDO EL ID----------------
- //console.log(await manager.deleteProduct(8))
+await manager.getProductById(7)
+
+  //-------------------BORRA EL PRODUCTO COLOCANDO EL ID- y crea una actualizacion---------------
+
+ console.log(await manager.deleteProduct(8))
  
  //---------------AGREGAR INFORMACION------------------
+
  console.log(await manager.updateProducts(7,"prueba",))
 
 
