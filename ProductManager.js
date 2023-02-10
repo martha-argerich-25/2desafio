@@ -76,18 +76,32 @@ async deleteProduct(id) {        // Elimina producto por ID lo filtro y me devue
 
 
 //-----------------------------METODO UPDATEPPRODUCT------------------------------
-async updateProducts (id,title,description){
+// 2 parametros para actualizar
+async updateProducts (id,title){
+
+// creo un array vacio donde voy a meter los productos actualizados
+
+let newArray = []
+// llamo a la funcion getproduct y lo guardo la constante producto
+const producto = await this.getProducts();
+// en el nuevo array guardo la busqueda por id
+newArray = producto.find((p)=>p.id===id);
+//validacion
+if (title === undefined) {
+  title = producto.title;
+} else {
+  newArray.title = title;
+}
 
 
+
+fs.promises.appendFile("./productos.json",`los productos actualizados  ${JSON.stringify(producto)}`)
 
 
 }
 
 
 }
-
-
-
 
 
 
@@ -119,12 +133,12 @@ async function main() {
  
 //-----------------OBTENER EL PRODUCTO POR ID----------------------
 
-await manager.getProductById(7)
+//await manager.getProductById(7)
   //-------------------BORRA EL PRODUCTO COLOCANDO EL ID----------------
  //console.log(await manager.deleteProduct(8))
  
  //---------------AGREGAR INFORMACION------------------
- //console.log(await manager.updateProducts)
+ console.log(await manager.updateProducts(7,"prueba"))
 
 
 }
